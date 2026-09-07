@@ -34,7 +34,8 @@
         .video-screen {
             position: relative;
             width: 100%;
-            height: 625px;
+            aspect-ratio: 1/1;
+            max-height: 600px;
             background: #000;
             overflow: hidden;
         }
@@ -246,7 +247,7 @@
         
         @media (max-width: 768px) {
             .video-screen {
-                height: 312px;
+                max-height: 400px;
             }
             .subtitle-english {
                 font-size: 1rem;
@@ -328,7 +329,6 @@
             { scene: 6, character: 'Adam', english: 'I just stayed at home to read, play games, and relax, but it was still fun.', chinese: '我只是待在家里看书、玩游戏、放松，但还是很有趣。' }
         ];
         
-        // 练习1：整句挖空
         const practice1Blanks = {
             4: { answer: 'Did you go anywhere interesting?' },
             7: { answer: 'Did you go to Lijiang?' },
@@ -338,7 +338,6 @@
             18: { answer: 'I did nothing special.' }
         };
         
-        // 练习2：按照您的样式挖空
         const practice2Blanks = {
             4: { display: '_________________?', answer: 'Did you go anywhere interesting' },
             5: { display: 'Yes, I went to Yunnan _____________.', answer: 'with my family' },
