@@ -119,7 +119,7 @@
         
         .blank {
             display: inline-block;
-            min-width: 40px;
+            min-width: 60px;
             border-bottom: 2px solid #FFD700;
             margin: 0 2px;
             color: #FFD700;
@@ -305,7 +305,6 @@
     </div>
 
     <script>
-        // 原文对话（20句）
         const dialogues = [
             { scene: 1, character: 'Adam', english: 'Hi, Peter. How are you?', chinese: '嗨，Peter。你好吗？' },
             { scene: 1, character: 'Peter', english: "Hi, Adam. I'm fine, thanks.", chinese: '嗨，Adam。我很好，谢谢。' },
@@ -329,7 +328,7 @@
             { scene: 6, character: 'Adam', english: 'I just stayed at home to read, play games, and relax, but it was still fun.', chinese: '我只是待在家里看书、玩游戏、放松，但还是很有趣。' }
         ];
         
-        // 练习1挖空（整句挖空）—— 第5、8、11、14、17、19句
+        // 练习1：整句挖空
         const practice1Blanks = {
             4: { answer: 'Did you go anywhere interesting?' },
             7: { answer: 'Did you go to Lijiang?' },
@@ -339,19 +338,20 @@
             18: { answer: 'I did nothing special.' }
         };
         
-        // 练习2挖空（单词挖空）—— 完全按照您的要求
+        // 练习2：按照您的样式挖空
         const practice2Blanks = {
-            4: { words: [0], answer: 'Did' },
-            5: { words: [5], answer: 'with' },
-            7: { words: [0], answer: 'Did' },
-            8: { words: [2, 5], answer: 'stayed' },
-            10: { words: [1], answer: 'says' },
-            11: { words: [4], answer: 'took' },
-            13: { words: [0, 2], answer: 'Did eat' },
-            14: { words: [3], answer: 'tasted' },
-            16: { words: [0], answer: 'Someone' },
-            17: { words: [3], answer: 'holiday' },
-            18: { words: [3], answer: 'special' }
+            4: { display: '_________________?', answer: 'Did you go anywhere interesting' },
+            5: { display: 'Yes, I went to Yunnan _____________.', answer: 'with my family' },
+            7: { display: '_______________?', answer: 'Did you go to Lijiang' },
+            8: { display: 'Yes, we__________ the old town __________, and we enjoyed it very much.', answer: 'stayed / for a few days' },
+            10: { display: '_________________.', answer: "Everyone says it's beautiful" },
+            11: { display: 'It is! It just __________________.', answer: 'took my breath away' },
+            13: { display: '_______ you____________?', answer: 'Did / eat anything special' },
+            14: { display: 'Yes, we did! Everything____________, especially_____________.', answer: 'tasted good / the steamed chicken soup' },
+            16: { display: '_____________ went to Beijing.', answer: 'Someone said you' },
+            17: { display: 'No, ___________.', answer: 'not this holiday' },
+            18: { display: 'I___________special.', answer: 'did nothing' },
+            19: { display: 'I ____________read, play games, and relax, but it was still fun.', answer: 'just stayed at home to' }
         };
         
         const sceneImages = {
@@ -420,13 +420,8 @@
                 englishText = '<span class="blank">____________________</span>';
                 currentAnswer = practice1Blanks[index].answer;
             } else if (currentMode === 'practice2' && practice2Blanks[index]) {
-                const words = dialogue.english.split(' ');
-                const blankInfo = practice2Blanks[index];
-                blankInfo.words.forEach(wordIndex => {
-                    words[wordIndex] = '<span class="blank">______</span>';
-                });
-                englishText = words.join(' ');
-                currentAnswer = blankInfo.answer;
+                englishText = practice2Blanks[index].display;
+                currentAnswer = practice2Blanks[index].answer;
             } else {
                 currentAnswer = '';
             }
