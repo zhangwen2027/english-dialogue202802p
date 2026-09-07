@@ -305,6 +305,7 @@
     </div>
 
     <script>
+        // 原文对话（20句）
         const dialogues = [
             { scene: 1, character: 'Adam', english: 'Hi, Peter. How are you?', chinese: '嗨，Peter。你好吗？' },
             { scene: 1, character: 'Peter', english: "Hi, Adam. I'm fine, thanks.", chinese: '嗨，Adam。我很好，谢谢。' },
@@ -328,6 +329,7 @@
             { scene: 6, character: 'Adam', english: 'I just stayed at home to read, play games, and relax, but it was still fun.', chinese: '我只是待在家里看书、玩游戏、放松，但还是很有趣。' }
         ];
         
+        // 练习1挖空（整句挖空）—— 第5、8、11、14、17、19句
         const practice1Blanks = {
             4: { answer: 'Did you go anywhere interesting?' },
             7: { answer: 'Did you go to Lijiang?' },
@@ -337,14 +339,15 @@
             18: { answer: 'I did nothing special.' }
         };
         
+        // 练习2挖空（单词挖空）—— 完全按照您的要求
         const practice2Blanks = {
             4: { words: [0], answer: 'Did' },
             5: { words: [5], answer: 'with' },
             7: { words: [0], answer: 'Did' },
-            8: { words: [2], answer: 'stayed' },
+            8: { words: [2, 5], answer: 'stayed' },
             10: { words: [1], answer: 'says' },
             11: { words: [4], answer: 'took' },
-            13: { words: [2], answer: 'eat' },
+            13: { words: [0, 2], answer: 'Did eat' },
             14: { words: [3], answer: 'tasted' },
             16: { words: [0], answer: 'Someone' },
             17: { words: [3], answer: 'holiday' },
