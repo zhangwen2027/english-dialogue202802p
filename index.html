@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人教版八上英语·动漫对话记忆</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .player-container {
+            width: 100%;
+            max-width: 900px;
+            background: #1a1a1a;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #e94560, #0f3460);
+            padding: 18px;
+            text-align: center;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 4px;
+        }
+        
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .video-screen {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            background: #000;
+            overflow: hidden;
+        }
+        
+        .scene-image {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.8s ease;
+        }
+        
+        .subtitle-layer {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.85);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 85%;
+            z-index: 10;
+            animation: subtitleIn 0.5s ease;
+        }
+        
+        @keyframes subtitleIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+        
+        .subtitle-english {
+            font-size: 1.7rem;
+            font-weight: bold;
+        }
+        
+        .subtitle-chinese {
+            font-size: 1.1rem;
+            color: #ccc;
+            margin-top: 5px;
+        }
+        
+        .scene-indicator {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            color: #FFD700;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            z-index: 10;
+        }
+        
+        .info-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: #2a2a2a;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .progress-container {
+            flex: 1;
+            height: 6px;
+            background: #444;
+            border-radius: 3px;
+            margin: 0 15px;
+            cursor: pointer;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #e94560;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            padding: 15px;
+            background: #2a2a2a;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+        
+        .btn-play { background: #e94560; }
+        .btn-pause { background: #f39c12; }
+        .btn-prev { background: #95a5a6; }
+        .btn-next { background: #3498db; }
+        .btn-scene { background: #2ecc71; color: #333; }
+        .btn-auto { background: #9b59b6; }
+        
+        .scene-nav {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            padding: 10px;
+            background: #222;
+            flex-wrap: wrap;
+        }
+        
+        .scene-btn {
+            padding: 8px 15px;
+            border: 2px solid #555;
+            border-radius: 15px;
+            background: #333;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .scene-btn:hover {
+            background: #555;
+        }
+        
+        .scene-btn.active {
+            background: #e94560;
+            border-color: #e94560;
+        }
+        
+        @media (max-width: 768px) {
+            .video-screen {
+                height: 350px;
+            }
+            
+            .subtitle-english {
+                font-size: 1.3rem;
+            }
+            
+            .subtitle-chinese {
+                font-size: 0.9rem;
+            }
+            
+            .btn {
+                padding: 10px 15px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="player-container">
+        <div class="header">
+            <h1>🎬 动漫对话记忆</h1>
+            <p>人教版八上英语 · Adam & Peter 的假期对话</p>
+        </div>
+        
+        <div class="video-screen" id="videoScreen">
+            <img class="scene-image" id="sceneImage" 
+                 src="images/scene1.jpg" 
+                 alt="场景1">
+            
+            <div class="scene-indicator" id="sceneIndicator">📍 场景1：打招呼</div>
+            
+            <div class="subtitle-layer" id="subtitleLayer">
+                <div class="subtitle-english" id="subtitleEnglish">Hi, Peter. How are you?</div>
+                <div class="subtitle-chinese" id="subtitleChinese">嗨，Peter。你好吗？</div>
+            </div>
+        </div>
+        
+        <div class="info-bar">
+            <span id="dialogueCounter">1 / 14</span>
+            <div class="progress-container">
+                <div class="progress-fill" id="progressFill" style="width: 7%"></div>
+            </div>
+            <span id="sceneCounter">场景 1/6</span>
+        </div>
+        
+        <div class="scene-nav" id="sceneNav">
+            <button class="scene-btn active" onclick="goToScene(0)">🏫 场景1</button>
+            <button class="scene-btn" onclick="goToScene(1)">🚄 场景2</button>
+            <button class="scene-btn" onclick="goToScene(2)">🏘️ 场景3</button>
+            <button class="scene-btn" onclick="goToScene(3)">🏔️ 场景4</button>
+            <button class="scene-btn" onclick="goToScene(4)">🍲 场景5</button>
+            <button class="scene-btn" onclick="goToScene(5)">🏠 场景6</button>
+        </div>
+        
+        <div class="controls">
+            <button class="btn btn-prev" onclick="prevDialogue()">⏮ 上一句</button>
+            <button class="btn btn-play" onclick="playScene()">▶ 播放本场景</button>
+            <button class="btn btn-pause" onclick="pausePlay()">⏸ 暂停</button>
+            <button class="btn btn-next" onclick="nextDialogue()">下一句 ⏭</button>
+            <button class="btn btn-scene" onclick="nextScene()">下一个场景 ⏩</button>
+            <button class="btn btn-auto" onclick="toggleAutoPlay()">🔄 自动播放</button>
+        </div>
+    </div>
+
+    <script>
+        const scenes = [
+            {
+                name: '场景1：打招呼',
+                image: 'images/scene1.jpg',
+                dialogues: [
+                    {
+                        character: 'Adam',
+                        english: 'Hi, Peter. How are you?',
+                        chinese: '嗨，Peter。你好吗？'
+                    },
+                    {
+                        character: 'Peter',
+                        english: "Hi, Adam. I'm fine, thanks.",
+                        chinese: '嗨，Adam。我很好，谢谢。'
+                    },
+                    {
+                        character: 'Adam',
+                        english: 'How was your holiday?',
+                        chinese: '你的假期怎么样？'
+                    },
+                    {
+                        character: 'Peter',
+                        english: 'It was fantastic.',
+                        chinese: '太棒了。'
+                    }
+                ]
+            },
+            {
+                name: '场景2：云南高铁站',
+                image: 'images/scene2.jpg',
+                dialogues: [
+                    {
+                        character: 'Adam',
+                        english: 'Did you go anywhere interesting?',
+                        chinese: '你去了什么有趣的地方吗？'
+                    },
+                    {
+                        character: 'Peter',
+                        english: 'Yes, I went to Yunnan with my family.',
+                        chinese: '是的，我和家人去了云南。'
+                    }
+                ]
+            },
+            {
+                name: '场景3：丽江古城',
+                image: 'images/scene3.jpg',
+                dialogues: [
+                    {
+                        character: 'Adam',
+                        english: 'Wow! That sounds great. Did you go to Lijiang?',
+                        chinese: '哇！听起来很棒。你去了丽江吗？'
+                    },
+                    {
+                        character: 'Peter',
+                        english: 'Yes, we stayed in the old town for a few days, and we enjoyed it very much.',
+                        chinese: '是的，我们在古城住了几天，非常享受。'
+                    }
+                ]
+            },
+            {
+                name: '场景4：玉龙雪山',
+                image: 'images/scene4.jpg',
+                dialogues: [
+                    {
+                        character: 'Adam',
+                        english: "Did you visit Yulong Mountain? Everyone says it's beautiful.",
+                        chinese: '你去了玉龙雪山吗？大家都说那里很美。'
+                    },
+                    {
+                        character: 'Peter',
+                        english: 'It is! It just took my breath away. We took a lot of great photos there.',
+                        chinese: '是的！太震撼了。我们在那里拍了很多好看的照片。'
+                    }
+                ]
+            },
+            {
+                name: '场景5：菌菇火锅',
+                image: 'images/scene5.jpg',
+                dialogues: [
+                    {
+                        character: 'Adam',
+                        english: 'Did you eat anything special?',
+                        chinese: '你吃了什么特别的东西吗？'
+                    },
+                    {
+                        character: 'Peter',
+                        english: 'Yes, we did! Everything tasted good, especially the steamed chicken soup.',
+                        chinese: '是的！所有东西都很好吃，尤其是蒸鸡汤。'
+                    }
+                ]
+            },
+            {
+                name: '场景6：居家休闲',
+                image: 'images/scene6.jpg',
+                dialogues: [
+                    {
+                        character: 'Peter',
+                        english: 'What about you? Someone said you went to Beijing.',
+                        chinese: '你呢？有人说你去了北京。'
+                    },
+                    {
+                        character: 'Adam',
+                        english: 'No, not this holiday. I did nothing special. I just stayed at home to read, play games, and relax, but it was still fun.',
+                        chinese: '不，这个假期没有。我什么都没做。我只是待在家里看书、玩游戏、放松，但还是很有趣。'
+                    }
+                ]
+            }
+        ];
+        
+        let currentSceneIndex = 0;
+        let currentDialogueIndex = 0;
+        let isPlaying = false;
+        let playInterval = null;
+        
+        let totalDialogues = 0;
+        scenes.forEach(scene => {
+            totalDialogues += scene.dialogues.length;
+        });
+        
+        function displayDialogue(sceneIndex, dialogueIndex) {
+            const scene = scenes[sceneIndex];
+            const dialogue = scene.dialogues[dialogueIndex];
+            
+            document.getElementById('sceneImage').src = scene.image;
+            document.getElementById('sceneImage').alt = scene.name;
+            
+            document.getElementById('sceneIndicator').textContent = 
+                `📍 ${scene.name}`;
+            
+            document.getElementById('subtitleEnglish').textContent = dialogue.english;
+            document.getElementById('subtitleChinese').textContent = 
+                `${dialogue.character}: ${dialogue.chinese}`;
+            
+            let globalIndex = 0;
+            for (let i = 0; i < sceneIndex; i++) {
+                globalIndex += scenes[i].dialogues.length;
+            }
+            globalIndex += dialogueIndex + 1;
+            
+            document.getElementById('dialogueCounter').textContent = 
+                `${globalIndex} / ${totalDialogues}`;
+            document.getElementById('sceneCounter').textContent = 
+                `场景 ${sceneIndex + 1}/${scenes.length}`;
+            
+            const progress = (globalIndex / totalDialogues) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            document.querySelectorAll('.scene-btn').forEach((btn, index) => {
+                if (index === sceneIndex) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+        
+        function nextDialogue() {
+            const scene = scenes[currentSceneIndex];
+            
+            if (currentDialogueIndex < scene.dialogues.length - 1) {
+                currentDialogueIndex++;
+            } else if (currentSceneIndex < scenes.length - 1) {
+                currentSceneIndex++;
+                currentDialogueIndex = 0;
+            } else {
+                currentSceneIndex = 0;
+                currentDialogueIndex = 0;
+            }
+            
+            displayDialogue(currentSceneIndex, currentDialogueIndex);
+        }
+        
+        function prevDialogue() {
+            if (currentDialogueIndex > 0) {
+                currentDialogueIndex--;
+            } else if (currentSceneIndex > 0) {
+                currentSceneIndex--;
+                currentDialogueIndex = scenes[currentSceneIndex].dialogues.length - 1;
+            } else {
+                currentSceneIndex = scenes.length - 1;
+                currentDialogueIndex = scenes[currentSceneIndex].dialogues.length - 1;
+            }
+            
+            displayDialogue(currentSceneIndex, currentDialogueIndex);
+        }
+        
+        function nextScene() {
+            if (currentSceneIndex < scenes.length - 1) {
+                currentSceneIndex++;
+                currentDialogueIndex = 0;
+            } else {
+                currentSceneIndex = 0;
+                currentDialogueIndex = 0;
+            }
+            
+            displayDialogue(currentSceneIndex, currentDialogueIndex);
+            pausePlay();
+        }
+        
+        function goToScene(sceneIndex) {
+            currentSceneIndex = sceneIndex;
+            currentDialogueIndex = 0;
+            displayDialogue(currentSceneIndex, currentDialogueIndex);
+            pausePlay();
+        }
+        
+        function playScene() {
+            if (isPlaying) return;
+            isPlaying = true;
+            
+            playInterval = setInterval(() => {
+                const scene = scenes[currentSceneIndex];
+                
+                if (currentDialogueIndex < scene.dialogues.length - 1) {
+                    currentDialogueIndex++;
+                } else {
+                    pausePlay();
+                    return;
+                }
+                
+                displayDialogue(currentSceneIndex, currentDialogueIndex);
+            }, 2500);
+        }
+        
+        function pausePlay() {
+            isPlaying = false;
+            clearInterval(playInterval);
+        }
+        
+        function toggleAutoPlay() {
+            if (isPlaying) {
+                pausePlay();
+            } else {
+                isPlaying = true;
+                
+                playInterval = setInterval(() => {
+                    const scene = scenes[currentSceneIndex];
+                    
+                    if (currentDialogueIndex < scene.dialogues.length - 1) {
+                        currentDialogueIndex++;
+                    } else if (currentSceneIndex < scenes.length - 1) {
+                        currentSceneIndex++;
+                        currentDialogueIndex = 0;
+                    } else {
+                        pausePlay();
+                        return;
+                    }
+                    
+                    displayDialogue(currentSceneIndex, currentDialogueIndex);
+                }, 2500);
+            }
+        }
+        
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowRight':
+                    nextDialogue();
+                    break;
+                case 'ArrowLeft':
+                    prevDialogue();
+                    break;
+                case 'ArrowDown':
+                    nextScene();
+                    break;
+                case ' ':
+                    e.preventDefault();
+                    toggleAutoPlay();
+                    break;
+                case 'p':
+                case 'P':
+                    playScene();
+                    break;
+            }
+        });
+        
+        displayDialogue(0, 0);
+    </script>
+</body>
+</html>
