@@ -31,6 +31,23 @@
             position: relative;
         }
         
+        .video-screen {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            background: #000;
+            overflow: hidden;
+        }
+        
+        .scene-image {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            z-index: 1;
+            background: #000;
+        }
+        
         /* 左上角标题 - 高透明度 */
         .header {
             position: absolute;
@@ -54,22 +71,6 @@
             font-size: 0.7rem;
             color: rgba(255, 255, 255, 0.65);
             font-weight: bold;
-        }
-        
-        .video-screen {
-            position: relative;
-            width: 100%;
-            height: 500px;
-            background: #000;
-            overflow: hidden;
-        }
-        
-        .scene-image {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: 1;
         }
         
         .scene-indicator {
@@ -132,7 +133,6 @@
             font-weight: bold;
         }
         
-        /* 练习区域 */
         .practice-area {
             background: rgba(0, 0, 0, 0.8);
             padding: 10px 15px;
@@ -268,7 +268,6 @@
         <div class="video-screen">
             <img class="scene-image" id="sceneImage" src="images/scene1.jpg.png" alt="场景">
             
-            <!-- 左上角标题 -->
             <div class="header">
                 <h1>🎬 动漫对话记忆</h1>
                 <p>人教版八上英语·假期对话</p>
@@ -282,7 +281,6 @@
             </div>
         </div>
         
-        <!-- 练习区域 -->
         <div class="practice-area" id="practiceArea" style="display:none;">
             <input type="text" class="practice-input" id="practiceInput" placeholder="输入答案...">
             <div class="result-feedback" id="resultFeedback"></div>
