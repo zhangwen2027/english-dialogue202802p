@@ -61,27 +61,36 @@
             height: 100%;
             object-fit: cover;
             transition: opacity 0.8s ease;
+            z-index: 1;
         }
         
+        /* 字幕层 - 白色透明背景 */
         .subtitle-layer {
             position: absolute;
-            bottom: 20px;
+            bottom: 15px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0,0,0,0.85);
-            color: white;
-            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.75);
+            color: #1a1a1a;
+            padding: 12px 25px;
             border-radius: 15px;
             text-align: center;
             max-width: 85%;
             z-index: 10;
-            animation: subtitleIn 0.5s ease;
+            display: none;
+            backdrop-filter: blur(3px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
         }
         
-        @keyframes subtitleIn {
+        .subtitle-layer.show {
+            display: block;
+            animation: subtitleFadeIn 0.5s ease;
+        }
+        
+        @keyframes subtitleFadeIn {
             from {
                 opacity: 0;
-                transform: translateX(-50%) translateY(30px);
+                transform: translateX(-50%) translateY(20px);
             }
             to {
                 opacity: 1;
@@ -92,11 +101,12 @@
         .subtitle-english {
             font-size: 1.7rem;
             font-weight: bold;
+            color: #1a1a1a;
         }
         
         .subtitle-chinese {
             font-size: 1.1rem;
-            color: #ccc;
+            color: #333;
             margin-top: 5px;
         }
         
@@ -105,13 +115,58 @@
             top: 15px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0,0,0,0.7);
-            color: #FFD700;
+            background: rgba(255, 255, 255, 0.75);
+            color: #333;
             padding: 8px 20px;
             border-radius: 20px;
             font-size: 1rem;
             font-weight: bold;
             z-index: 10;
+            backdrop-filter: blur(3px);
+        }
+        
+        /* 开始按钮覆盖层 */
+        .start-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            background: rgba(0,0,0,0.3);
+            transition: opacity 0.5s ease;
+        }
+        
+        .start-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .start-btn {
+            padding: 20px 40px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            background: #e94560;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            transition: all 0.3s;
+            animation: pulse 2s infinite;
+        }
+        
+        .start-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
         
         .info-bar {
@@ -237,6 +292,12 @@
             
             <div class="scene-indicator" id="sceneIndicator">📍 场景1：打招呼</div>
             
+            <!-- 开始按钮覆盖层 -->
+            <div class="start-overlay" id="startOverlay">
+                <button class="start-btn" onclick="startDialogue()">▶ 开始对话</button>
+            </div>
+            
+            <!-- 字幕层 -->
             <div class="subtitle-layer" id="subtitleLayer">
                 <div class="subtitle-english" id="subtitleEnglish">Hi, Peter. How are you?</div>
                 <div class="subtitle-chinese" id="subtitleChinese">Adam: 嗨，Peter。你好吗？</div>
@@ -277,106 +338,50 @@
                 name: '场景1：打招呼',
                 image: 'images/scene1.jpg.png',
                 dialogues: [
-                    {
-                        character: 'Adam',
-                        english: 'Hi, Peter. How are you?',
-                        chinese: '嗨，Peter。你好吗？'
-                    },
-                    {
-                        character: 'Peter',
-                        english: "Hi, Adam. I'm fine, thanks.",
-                        chinese: '嗨，Adam。我很好，谢谢。'
-                    },
-                    {
-                        character: 'Adam',
-                        english: 'How was your holiday?',
-                        chinese: '你的假期怎么样？'
-                    },
-                    {
-                        character: 'Peter',
-                        english: 'It was fantastic.',
-                        chinese: '太棒了。'
-                    }
+                    { character: 'Adam', english: 'Hi, Peter. How are you?', chinese: '嗨，Peter。你好吗？' },
+                    { character: 'Peter', english: "Hi, Adam. I'm fine, thanks.", chinese: '嗨，Adam。我很好，谢谢。' },
+                    { character: 'Adam', english: 'How was your holiday?', chinese: '你的假期怎么样？' },
+                    { character: 'Peter', english: 'It was fantastic.', chinese: '太棒了。' }
                 ]
             },
             {
                 name: '场景2：云南高铁站',
                 image: 'images/scene2.jpg.png',
                 dialogues: [
-                    {
-                        character: 'Adam',
-                        english: 'Did you go anywhere interesting?',
-                        chinese: '你去了什么有趣的地方吗？'
-                    },
-                    {
-                        character: 'Peter',
-                        english: 'Yes, I went to Yunnan with my family.',
-                        chinese: '是的，我和家人去了云南。'
-                    }
+                    { character: 'Adam', english: 'Did you go anywhere interesting?', chinese: '你去了什么有趣的地方吗？' },
+                    { character: 'Peter', english: 'Yes, I went to Yunnan with my family.', chinese: '是的，我和家人去了云南。' }
                 ]
             },
             {
                 name: '场景3：丽江古城',
                 image: 'images/scene3.jpg.png',
                 dialogues: [
-                    {
-                        character: 'Adam',
-                        english: 'Wow! That sounds great. Did you go to Lijiang?',
-                        chinese: '哇！听起来很棒。你去了丽江吗？'
-                    },
-                    {
-                        character: 'Peter',
-                        english: 'Yes, we stayed in the old town for a few days, and we enjoyed it very much.',
-                        chinese: '是的，我们在古城住了几天，非常享受。'
-                    }
+                    { character: 'Adam', english: 'Wow! That sounds great. Did you go to Lijiang?', chinese: '哇！听起来很棒。你去了丽江吗？' },
+                    { character: 'Peter', english: 'Yes, we stayed in the old town for a few days, and we enjoyed it very much.', chinese: '是的，我们在古城住了几天，非常享受。' }
                 ]
             },
             {
                 name: '场景4：玉龙雪山',
                 image: 'images/scene4.jpg.png',
                 dialogues: [
-                    {
-                        character: 'Adam',
-                        english: "Did you visit Yulong Mountain? Everyone says it's beautiful.",
-                        chinese: '你去了玉龙雪山吗？大家都说那里很美。'
-                    },
-                    {
-                        character: 'Peter',
-                        english: 'It is! It just took my breath away. We took a lot of great photos there.',
-                        chinese: '是的！太震撼了。我们在那里拍了很多好看的照片。'
-                    }
+                    { character: 'Adam', english: "Did you visit Yulong Mountain? Everyone says it's beautiful.", chinese: '你去了玉龙雪山吗？大家都说那里很美。' },
+                    { character: 'Peter', english: 'It is! It just took my breath away. We took a lot of great photos there.', chinese: '是的！太震撼了。我们在那里拍了很多好看的照片。' }
                 ]
             },
             {
                 name: '场景5：菌菇火锅',
                 image: 'images/scene5.jpg.png',
                 dialogues: [
-                    {
-                        character: 'Adam',
-                        english: 'Did you eat anything special?',
-                        chinese: '你吃了什么特别的东西吗？'
-                    },
-                    {
-                        character: 'Peter',
-                        english: 'Yes, we did! Everything tasted good, especially the steamed chicken soup.',
-                        chinese: '是的！所有东西都很好吃，尤其是蒸鸡汤。'
-                    }
+                    { character: 'Adam', english: 'Did you eat anything special?', chinese: '你吃了什么特别的东西吗？' },
+                    { character: 'Peter', english: 'Yes, we did! Everything tasted good, especially the steamed chicken soup.', chinese: '是的！所有东西都很好吃，尤其是蒸鸡汤。' }
                 ]
             },
             {
                 name: '场景6：居家休闲',
                 image: 'images/scene6.jpg.png',
                 dialogues: [
-                    {
-                        character: 'Peter',
-                        english: 'What about you? Someone said you went to Beijing.',
-                        chinese: '你呢？有人说你去了北京。'
-                    },
-                    {
-                        character: 'Adam',
-                        english: 'No, not this holiday. I did nothing special. I just stayed at home to read, play games, and relax, but it was still fun.',
-                        chinese: '不，这个假期没有。我什么都没做。我只是待在家里看书、玩游戏、放松，但还是很有趣。'
-                    }
+                    { character: 'Peter', english: 'What about you? Someone said you went to Beijing.', chinese: '你呢？有人说你去了北京。' },
+                    { character: 'Adam', english: 'No, not this holiday. I did nothing special. I just stayed at home to read, play games, and relax, but it was still fun.', chinese: '不，这个假期没有。我什么都没做。我只是待在家里看书、玩游戏、放松，但还是很有趣。' }
                 ]
             }
         ];
@@ -385,6 +390,7 @@
         let currentDialogueIndex = 0;
         let isPlaying = false;
         let playInterval = null;
+        let hasStarted = false;
         
         let totalDialogues = 0;
         scenes.forEach(scene => {
@@ -408,6 +414,13 @@
             speak(dialogue.english);
         }
         
+        // 开始对话
+        function startDialogue() {
+            hasStarted = true;
+            document.getElementById('startOverlay').classList.add('hidden');
+            displayDialogue(currentSceneIndex, currentDialogueIndex);
+        }
+        
         function displayDialogue(sceneIndex, dialogueIndex) {
             const scene = scenes[sceneIndex];
             const dialogue = scene.dialogues[dialogueIndex];
@@ -415,12 +428,13 @@
             document.getElementById('sceneImage').src = scene.image;
             document.getElementById('sceneImage').alt = scene.name;
             
-            document.getElementById('sceneIndicator').textContent = 
-                `📍 ${scene.name}`;
+            document.getElementById('sceneIndicator').textContent = `📍 ${scene.name}`;
             
             document.getElementById('subtitleEnglish').textContent = dialogue.english;
-            document.getElementById('subtitleChinese').textContent = 
-                `${dialogue.character}: ${dialogue.chinese}`;
+            document.getElementById('subtitleChinese').textContent = `${dialogue.character}: ${dialogue.chinese}`;
+            
+            // 显示字幕
+            document.getElementById('subtitleLayer').classList.add('show');
             
             let globalIndex = 0;
             for (let i = 0; i < sceneIndex; i++) {
@@ -428,10 +442,8 @@
             }
             globalIndex += dialogueIndex + 1;
             
-            document.getElementById('dialogueCounter').textContent = 
-                `${globalIndex} / ${totalDialogues}`;
-            document.getElementById('sceneCounter').textContent = 
-                `场景 ${sceneIndex + 1}/${scenes.length}`;
+            document.getElementById('dialogueCounter').textContent = `${globalIndex} / ${totalDialogues}`;
+            document.getElementById('sceneCounter').textContent = `场景 ${sceneIndex + 1}/${scenes.length}`;
             
             const progress = (globalIndex / totalDialogues) * 100;
             document.getElementById('progressFill').style.width = progress + '%';
@@ -449,6 +461,7 @@
         }
         
         function nextDialogue() {
+            if (!hasStarted) return;
             const scene = scenes[currentSceneIndex];
             
             if (currentDialogueIndex < scene.dialogues.length - 1) {
@@ -465,6 +478,7 @@
         }
         
         function prevDialogue() {
+            if (!hasStarted) return;
             if (currentDialogueIndex > 0) {
                 currentDialogueIndex--;
             } else if (currentSceneIndex > 0) {
@@ -479,6 +493,7 @@
         }
         
         function nextScene() {
+            if (!hasStarted) return;
             if (currentSceneIndex < scenes.length - 1) {
                 currentSceneIndex++;
                 currentDialogueIndex = 0;
@@ -494,11 +509,16 @@
         function goToScene(sceneIndex) {
             currentSceneIndex = sceneIndex;
             currentDialogueIndex = 0;
+            hasStarted = true;
+            document.getElementById('startOverlay').classList.add('hidden');
             displayDialogue(currentSceneIndex, currentDialogueIndex);
             pausePlay();
         }
         
         function playScene() {
+            if (!hasStarted) {
+                startDialogue();
+            }
             if (isPlaying) return;
             isPlaying = true;
             
@@ -526,6 +546,9 @@
             if (isPlaying) {
                 pausePlay();
             } else {
+                if (!hasStarted) {
+                    startDialogue();
+                }
                 isPlaying = true;
                 
                 playInterval = setInterval(() => {
@@ -568,7 +591,9 @@
             }
         });
         
-        displayDialogue(0, 0);
+        // 初始只显示图片，不显示对话
+        document.getElementById('sceneImage').src = scenes[0].image;
+        document.getElementById('sceneIndicator').textContent = `📍 ${scenes[0].name}`;
     </script>
 </body>
 </html>
