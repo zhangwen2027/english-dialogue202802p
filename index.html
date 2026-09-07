@@ -171,6 +171,7 @@
         .btn-next { background: #3498db; }
         .btn-scene { background: #2ecc71; color: #333; }
         .btn-auto { background: #9b59b6; }
+        .btn-speak { background: #ff6b6b; }
         
         .scene-nav {
             display: flex;
@@ -238,7 +239,7 @@
             
             <div class="subtitle-layer" id="subtitleLayer">
                 <div class="subtitle-english" id="subtitleEnglish">Hi, Peter. How are you?</div>
-                <div class="subtitle-chinese" id="subtitleChinese">嗨，Peter。你好吗？</div>
+                <div class="subtitle-chinese" id="subtitleChinese">Adam: 嗨，Peter。你好吗？</div>
             </div>
         </div>
         
@@ -266,6 +267,7 @@
             <button class="btn btn-next" onclick="nextDialogue()">下一句 ⏭</button>
             <button class="btn btn-scene" onclick="nextScene()">下一个场景 ⏩</button>
             <button class="btn btn-auto" onclick="toggleAutoPlay()">🔄 自动播放</button>
+            <button class="btn btn-speak" onclick="speakCurrent()">🔊 朗读</button>
         </div>
     </div>
 
@@ -389,6 +391,23 @@
             totalDialogues += scene.dialogues.length;
         });
         
+        // 语音合成功能
+        function speak(text) {
+            window.speechSynthesis.cancel();
+            const speech = new SpeechSynthesisUtterance(text);
+            speech.lang = 'en-US';
+            speech.rate = 0.85;
+            speech.pitch = 1;
+            speech.volume = 1;
+            window.speechSynthesis.speak(speech);
+        }
+        
+        function speakCurrent() {
+            const scene = scenes[currentSceneIndex];
+            const dialogue = scene.dialogues[currentDialogueIndex];
+            speak(dialogue.english);
+        }
+        
         function displayDialogue(sceneIndex, dialogueIndex) {
             const scene = scenes[sceneIndex];
             const dialogue = scene.dialogues[dialogueIndex];
@@ -424,6 +443,9 @@
                     btn.classList.remove('active');
                 }
             });
+            
+            // 自动朗读
+            speak(dialogue.english);
         }
         
         function nextDialogue() {
@@ -491,12 +513,13 @@
                 }
                 
                 displayDialogue(currentSceneIndex, currentDialogueIndex);
-            }, 2500);
+            }, 3500);
         }
         
         function pausePlay() {
             isPlaying = false;
             clearInterval(playInterval);
+            window.speechSynthesis.cancel();
         }
         
         function toggleAutoPlay() {
@@ -519,7 +542,7 @@
                     }
                     
                     displayDialogue(currentSceneIndex, currentDialogueIndex);
-                }, 2500);
+                }, 3500);
             }
         }
         
@@ -538,9 +561,9 @@
                     e.preventDefault();
                     toggleAutoPlay();
                     break;
-                case 'p':
-                case 'P':
-                    playScene();
+                case 's':
+                case 'S':
+                    speakCurrent();
                     break;
             }
         });
